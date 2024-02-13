@@ -25,7 +25,7 @@ import TodoForm from "./components/TodoForm.vue";
 import TodoSpinner from "./components/TodoSpinner.vue";
 import TodoItems from "./components/TodoItems.vue";
 import TodoEmpty from "./components/TodoEmpty.vue";
-import axios from "axios";
+
 
 export default {
   name: "App",
@@ -42,17 +42,16 @@ export default {
     };
   },
   created() {
-    this.loading = true;
-    // abaiixo temos o codigo do ajax
-    axios
-      .get("http://localhost:3000/todos")
-      .then((response) => {
-        this.$store.commit("storeTodos", response.data);
-      })
-      // abaixo temos o codigo que vai finalizar o loading
-      .finally(() => {
-        this.loading = false;
-      });
+    this.loading=true // faz o sinal de carregamento do loading aparacer
+    this.$store.dispatch('getTodos') // aqui fazemos o dispatch  da action obs.: la no store, usamos store direto aqui temos que usar $store com o $ na frete da declaração
+    this.loading = false // faz o sinal de carregamento do loading sumir e aparece então o conteudo que deve ser exiibido
+    console.log('fim settimeout')
+    /** 
+     * O Dispatch é um método simples do Store, que tem como responsabilidade
+     *  enviar a Action ao Reducer. Sua sintaxe é extremamente simples, chamamos
+     *  o método . dispatch() e passamos por parâmetro a Action a ser enviada.
+     */
+    
   },
 };
 </script>

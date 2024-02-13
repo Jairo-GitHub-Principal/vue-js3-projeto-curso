@@ -4,7 +4,13 @@
         class="flex items-center px-4 py-3 border-b border-gray-400 last:border-b-0"
       >
         <div class="flex items-center justify-center mr-2">
-          <button class="text-gray-400">
+          <button 
+          :class="{
+                  'text-gray-400':!isCompleted,
+                  'text-green-600':isCompleted
+            }" 
+            @click="onCheckClick"
+          >
             <svg
               class="w-5 h-5"
               fill="none"
@@ -23,11 +29,14 @@
         </div>
 
         <div class="w-full">
+          
           <input
             type="text"
             placeholder="Digite a sua tarefa"
-            v-bind:value="todo.title"
+            v-model="title"
             class="bg-gray-300 placeholder-gray-500 text-gray-700 font-light focus:outline-none block w-full appearance-none leading-normal mr-3"
+
+            @keyup.enter="onTitleChange"
           />
         </div>
 
@@ -65,6 +74,40 @@
                 type:Object,
                 default:()=>({}),
             }
+        },
+        data() {
+          return {
+            title:this.todo.title,
+            isCompleted: this.todo.completed
+          }
+        },
+        methods:{
+           onTitleChange(){  // aqui temos o metodo update, que vai receber os dados digitados pelo usuario , e enviar para nossa store, para que os mesmos sejam percistidos no nosso DB
+             // aqui o valor atual na imput, é passado como parametro, e é add na const newTiitle, e é atribuido como novo valor da propriedade title da nossa "todos"
+
+            if(!this.title){
+              return;
+            }
+            this.updateTodo()
+           
+            console.log(this.title)
+          },
+
+          updateTodo(){
+            const payload ={ // objeto que contem que tem todas as propriedade da todo, que sera atualizada
+              id:this.todo.id,
+              data:{
+                title:this.title,
+                completed: this.isCompleted
+
+              }
+            }
+            this.$store.dispatch('updateTodo',payload) // cahma o metod  updateTodo, no arquiivo index da nossa store e passa pra ele o objeto payload, que tem os novos dados para ser percistiidos , no DB e atualiiza a base de dados existentes, 
+          },
+          onCheckClick(){
+            this.isCompleted = !this.isCompleted
+            this.updateTodo()
+          }
         }
     }
 </script>

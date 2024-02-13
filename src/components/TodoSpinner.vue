@@ -1,8 +1,8 @@
 <template>
     <!-- TodoSpinner -->
-    <div class="text-center">
+    <div class="text-center p3">
                <img
-                   src="@/assets/img/spinner.svg"
+                   src="../assets/img/spinner.svg"
                    alt=""
                    class="inline-block w-5 h-5"
                >
