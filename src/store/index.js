@@ -9,10 +9,22 @@ export default createStore({
     storeTodos(state,payload){
       state.todos=payload
     },
-    storeTodo(state,payload){
+    storeTodo(state,payload){ // obs essa logica poderia estar dentro do update, que ainda faria sentido
       const index = state.todos.findIndex(todo=>todo.id===payload.id)
+      if(index >=0){ // se o elemento do indice existir , sera atualizado com as novas informações contidas em payload
+        state.todos.splice(index,1,payload) //O método splice() altera o conteúdo de uma lista, adicionando novos elementos enquanto remove elementos antigos.
+      }else{ // se não: caso não haja nenhuma informação cadastrada para o indice(index), sera feito um push, e as novas informações dara origem a um novo cadastro
+        state.todos.push(payload)
+      }
       console.log(index);
       //state.todos.push(payload)
+    },
+
+    deleteTodo(state,id){
+      const index = state.todos.findIndex(todo=>todo.id === id)
+      if(index >=0){
+        state.todos.splice(index,1)
+      }
     }
   },
   actions: { // a action 
@@ -44,11 +56,18 @@ export default createStore({
     },
 
     // atualizar dados Update
-    updateTodo(context,{id,data}){
+    updateTodo({commit},{id,data}){
       return axios.put(`http://localhost:3000/todos/${id}`,data) // chamada ajax, com a url, onde sera persistidos os dados, o id do dado que sera atualiizado, e o valor dos dados cujo mesmo passara a ser o valor atual
-          //.then((response)=>{ // resposta
-          //commit('storeTodo',response.data) // commit chama o metodo storeTodo e passa os dados de resposta "response.data" para o metodo storeTodo
-          // })
+          .then((response)=>{ // resposta
+          commit('storeTodo',response.data) // commit chama o metodo storeTodo e passa os dados de resposta "response.data" para o metodo storeTodo
+          })
+    },
+
+    deleteTodo({commit},id){
+      return axios.delete(`http://localhost:3000/todos/${id}`) // chamada ajax, com a url, onde sera persistidos os dados, o id do dado que sera atualiizado, e o valor dos dados cujo mesmo passara a ser o valor atual
+          .then(()=>{ // resposta
+          commit('deleteTodo',id) // commit chama o metodo storeTodo e passa os dados de resposta "response.data" para o metodo storeTodo
+          })
     }
 
   },
