@@ -9,11 +9,11 @@
         <!--Todoform -->
         <TodoForm />
 
-        <!-- Todo items -->
-        <TodoItems />
+        <!-- Todo items  se "todos for > = mostra o conteudo das todos"-->
+        <TodoItems v-if="$store.state.todos.length" />
 
-        <!-- Todo empty -->
-        <TodoEmpty />
+        <!-- Todo empty se "todos for  = 0  mostra o conteudo de todoEmpyt" -->
+        <TodoEmpty v-else />
       </div>
     </div>
   </div>
